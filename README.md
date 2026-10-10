@@ -1,3 +1,14 @@
+## Contact
+
+For questions, feedback, bug reports, or other inquiries regarding TUXIXI Terminal, contact the project team at:
+
+**Email:** [tuxixi_team@proton.me](mailto:tuxixi_team@proton.me)
+
+---
+
+**TUXIXI Terminal Team**
+
+
 # TUXIXI Terminal
 
 **TUXIXI Terminal is a GTK4-based terminal emulator for Linux, built with Python, PyGObject, and VTE.** It provides a graphical terminal window, a custom prompt and shell interface, configurable color themes, font-size controls, and a small set of built-in command aliases.
