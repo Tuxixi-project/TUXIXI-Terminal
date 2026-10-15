@@ -61,19 +61,19 @@ python3 main.py
 
 Make sure all project files remain together inside the `tuxixi` directory.
 
-Method 2: Clone the Repository
+### Method 2: Clone the Repository
 
 Clone the repository:
 
-git clone https://github.com/Tuxixi-project/TUXIXI-Terminal.git
+    git clone https://github.com/Tuxixi-project/TUXIXI-Terminal.git
 
 Enter the project directory:
 
-cd TUXIXI-Terminal
+    cd TUXIXI-Terminal
 
 Start TUXIXI:
 
-python3 main.py
+    python3 main.py
 
 ## Contact
 
