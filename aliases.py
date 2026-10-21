@@ -2,10 +2,10 @@ import subprocess
 
 ALIASES = {
     "tuxixi/sys": "echo -e '\033[1;32m--- TUXIXI System Status ---\033[0m' && free -h && echo '' && df -h /",
-    "tuxixi/ip": "echo -e 'Internal IP: '$(hostname -I | awk '{print $1}') && echo -e 'External IP: '$(curl -s ifconfig.me 2>/dev/null || echo 'Error')",
+    "tuxixi/ip": "echo -e 'Internal IP: '$(ip route get 1.1.1.1 2>/dev/null | awk '{print $7; exit}' || hostname -i 2>/dev/null) && echo -e 'External IP: '$(curl -s --max-time 3 ifconfig.me 2>/dev/null || echo 'Error')",
     "ll": "ls -la --color=auto --group-directories-first",
     "cls": "clear",
-    "tuxixi/ver": "echo 'TUXIXI Terminal v1.1.1 (GTK 4 / VTE 3.91)'"
+    "tuxixi/ver": "echo 'TUXIXI Terminal v1.1.2 (GTK 4 / VTE 3.91)'"
 }
 
 DESCRIPTIONS = {
