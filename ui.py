@@ -34,7 +34,7 @@ class TuxixiWindow(Gtk.ApplicationWindow):
             "scrollbar { background-color: #1E1E1E; }"
         )
         provider = Gtk.CssProvider()
-        provider.load_from_data(css.encode("utf-8"))
+        provider.load_from_string(css)
         display = Gdk.Display.get_default()
         if display:
             Gtk.StyleContext.add_provider_for_display(
