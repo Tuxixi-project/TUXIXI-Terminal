@@ -68,7 +68,7 @@ class TuxixiTerminal:
 
         if ctrl and shift:
             if keyval in (Gdk.KEY_C, Gdk.KEY_c):
-                self.terminal.copy_clipboard_format(Vte.Format.TEXT)
+                self.terminal.copy_clipboard()
                 return True
             elif keyval in (Gdk.KEY_V, Gdk.KEY_v):
                 self.paste_clean_text()
