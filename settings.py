@@ -1,4 +1,4 @@
-import os, json
+import os, json, sys
 
 CONFIG_PATH = os.path.expanduser("~/.config/tuxixi/config.json")
 
@@ -24,7 +24,7 @@ def load_settings():
 def save_settings(settings):
     try:
         os.makedirs(os.path.dirname(CONFIG_PATH), exist_ok=True)
-        with open(CONFIG_PATH, "w") as f:
+        with open(CONFIG_PATH, "w", encoding="utf-8") as f:
             json.dump(settings, f, indent=4)
-    except Exception:
-        pass
+    except Exception as e:
+        print(f"Konfiqurasiya yadda saxlanılmadı: {e}", file=sys.stderr)
