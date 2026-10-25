@@ -81,7 +81,7 @@ For questions, feedback, bug reports, or other inquiries, contact the project te
 
 **Email:** [tuxixi_team@proton.me](mailto:tuxixi_team@proton.me)
 
-**Site**   https://tuxixi-project.github.io/tuxixi-Project_site/
+**Site**   https://tuxixi-project.github.io/
 
 **TUXIXI Terminal Team**
 
