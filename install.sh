@@ -1,6 +1,6 @@
 #!/bin/bash
 
-TAR_FILE="TUXIXI-Terminal-v1.0.0.tar.gz"
+TAR_FILE="TUXIXI-Terminal-v1.1.2.tar.gz"
 
 if [ ! -f "$TAR_FILE" ]; then
     echo "Error: File not found!"
