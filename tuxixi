@@ -1,0 +1,101 @@
+#!/bin/sh
+VERSION="2.0.0"
+
+# TUXIXI Color Palette
+RESET='\033[0m'
+BOLD='\033[1m'
+
+PURPLE='\033[38;2;192;132;252m'
+CYAN='\033[38;2;34;211;238m'
+LIME='\033[38;2;163;230;53m'
+AMBER='\033[38;2;251;191;36m'
+SLATE='\033[38;2;148;163;184m'
+RED='\033[38;2;248;113;113m'
+
+
+show_help() {
+    printf '\n'
+    printf "${BOLD}${PURPLE}◆ TUXIXI TERMINAL${RESET} ${SLATE}v${VERSION}${RESET}\n"
+    printf "${SLATE}────────────────────────────────────────${RESET}\n\n"
+
+    printf "${BOLD}${CYAN}COMMANDS${RESET}\n"
+    printf "  ${LIME}tuxixi help${RESET}    ${SLATE}Display help${RESET}\n"
+    printf "  ${LIME}tuxixi sys${RESET}     ${SLATE}System information${RESET}\n"
+    printf "  ${LIME}tuxixi ip${RESET}      ${SLATE}Network information${RESET}\n"
+    printf "  ${LIME}tuxixi ver${RESET}     ${SLATE}Version information${RESET}\n\n"
+
+    printf "${BOLD}${CYAN}UTILITIES${RESET}\n"
+    printf "  ${LIME}ll${RESET}             ${SLATE}List directory contents${RESET}\n"
+    printf "  ${LIME}cls${RESET}            ${SLATE}Clear terminal${RESET}\n\n"
+
+    printf "${BOLD}${CYAN}KEYBOARD SHORTCUTS${RESET}\n"
+    printf "  ${AMBER}Ctrl+Shift+C${RESET}   ${SLATE}Copy${RESET}\n"
+    printf "  ${AMBER}Ctrl+Shift+V${RESET}   ${SLATE}Paste cleanly${RESET}\n"
+    printf "  ${AMBER}Ctrl+Shift+T${RESET}   ${SLATE}Change theme${RESET}\n"
+    printf "  ${AMBER}Ctrl+Shift++${RESET}   ${SLATE}Increase font size${RESET}\n"
+    printf "  ${AMBER}Ctrl+Shift+-${RESET}   ${SLATE}Decrease font size${RESET}\n"
+    printf "  ${AMBER}Ctrl+Shift+N${RESET}   ${SLATE}New window${RESET}\n\n"
+
+    printf "${PURPLE}◆${RESET} ${SLATE}Built for terminal enthusiasts${RESET}\n\n"
+}
+
+
+show_sys() {
+    printf "\n${BOLD}${PURPLE}◆ SYSTEM STATUS${RESET}\n\n"
+
+    printf "${CYAN}▸ MEMORY${RESET}\n"
+    free -h
+
+    printf "\n${CYAN}▸ ROOT FILESYSTEM${RESET}\n"
+    df -h /
+    printf "\n"
+}
+
+
+
+show_ip() {
+    printf "\n${BOLD}${PURPLE}◆ NETWORK INFORMATION${RESET}\n"
+    printf "${SLATE}────────────────────────────────────────${RESET}\n\n"
+
+    internal_ip=$(ip -4 route get 1.1.1.1 2>/dev/null |
+        awk '{for(i=1;i<=NF;i++) if($i=="src"){print $(i+1); exit}}')
+
+    if [ -z "$internal_ip" ]; then
+        internal_ip=$(hostname -I 2>/dev/null | awk '{print $1}')
+    fi
+
+    printf "${CYAN}▸ INTERNAL IP${RESET}   "
+    if [ -n "$internal_ip" ]; then
+        printf "${LIME}%s${RESET}\n" "$internal_ip"
+    else
+        printf "${RED}Unavailable${RESET}\n"
+    fi
+
+    printf "${CYAN}▸ EXTERNAL IP${RESET}   "
+    if command -v curl >/dev/null 2>&1; then
+        external_ip=$(curl -fsS --max-time 5 https://ifconfig.me 2>/dev/null)
+
+        if [ -n "$external_ip" ]; then
+            printf "${LIME}%s${RESET}\n" "$external_ip"
+        else
+            printf "${RED}Unavailable${RESET}\n"
+        fi
+    else
+        printf "${AMBER}curl is not installed${RESET}\n"
+    fi
+
+    printf "\n${PURPLE}◆${RESET} ${SLATE}Network diagnostics complete${RESET}\n\n"
+}
+
+
+case "$1" in
+    help|-h|--help|"") show_help ;;
+    sys) show_sys ;;
+    ip) show_ip ;;
+    ver|--version|-v) printf 'TUXIXI Terminal v%s\n' "$VERSION" ;;
+    *)
+        printf 'Unknown command: %s\n' "$1" >&2
+        printf 'Run "tuxixi help" for available commands.\n' >&2
+        exit 2
+        ;;
+esac
