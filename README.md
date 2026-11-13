@@ -1,89 +1,134 @@
-# TUXIXI Terminal
+# ◆ TUXİXİ Terminal
 
-TUXIXI Terminal is a Linux terminal emulator built with **Python, GTK4, and VTE**.
+**A simple, customizable terminal emulator for Linux.**
 
-## Requirements
+TUXİXİ is a Linux terminal emulator built with Python, GTK4 and VTE.
 
-Before running TUXIXI, make sure you have:
+It provides a clean interface while allowing you to use your system's real shell, such as Bash, Zsh or Fish.
 
-- Python 3
+The goal of TUXİXİ is simple: a comfortable terminal with its own identity, without getting in the way of your Linux environment.
+
+## ✨ Features
+
+- **Real Shell Support:** Use your system's Bash, Zsh or Fish.
+- **Custom Commands:** TUXİXİ comes with its own command-line utilities.
+- **TrueColor Support:** 24-bit colors for a better terminal experience.
+- **Custom Themes:** Change the terminal's appearance.
+- **Multiple Windows:** Open multiple terminal windows.
+- **Clipboard Support:** Copy and paste text easily.
+- **Keyboard Shortcuts:** Convenient shortcuts for everyday use.
+- **System Information:** View memory, filesystem and network information.
+
+## 🛠️ Built With
+
+- Python
 - GTK4
-- PyGObject
-- VTE for GTK4 (`Vte-3.91`)
+- VTE
+- POSIX Shell Scripts
 
-### Install dependencies
+## 📦 Installation
 
-**Ubuntu / Debian:**
+### 1. Download
 
-```bash
-sudo apt update
-sudo apt install python3 python3-gi gir1.2-gtk-4.0 gir1.2-vte-3.91
-```
+Download the latest `tuxixi_terminal_v2.0.0.tar.gz` archive from the project's Releases page.
 
-**Arch Linux:**
+### 2. Extract
 
-```bash
-sudo pacman -S python python-gobject gtk4 vte4
-```
+Extract the downloaded archive.
 
-## Installation
+### 3. Run the installer
 
-1. Download `TUXIXI-Terminal-v1.0.0.tar.gz` and `install.sh` from the project's release page.
-2. Put both files in the **same directory**.
-3. Open a terminal in that directory.
-4. Give the installation script permission to run:
+Open a terminal in the directory containing `install.sh` and run:
 
 ```bash
 chmod +x install.sh
-```
-
-5. Run the installer:
-
-```bash
 ./install.sh
 ```
 
-The installer will extract the archive and create the `tuxixi` directory.
+The installer will automatically:
 
-## Run TUXIXI
+- Find the TUXİXİ archive in your Home directory (excluding Trash).
+- Extract the project files.
+- Install TUXİXİ.
+- Set executable permissions for its commands.
+- Install the application icon.
+- Create a desktop entry.
 
-Enter the project directory:
+No root permissions are required.
+
+### Requirements
+
+- Linux
+- Python 3
+- GTK4
+- VTE
+- Python GTK4 and VTE bindings
+
+## ⌨️ TUXİXİ Commands
+
+TUXİXİ includes its own commands:
+
+| Command | Description |
+|---|---|
+| `tuxixi help` | Show available commands |
+| `tuxixi sys` | Display system information |
+| `tuxixi ip` | Display IP information |
+| `tuxixi ver` | Show TUXİXİ version |
+| `ll` | List files and directories |
+| `cls` | Clear the terminal |
+
+These commands are available inside TUXİXİ's own shell environment. They are not globally installed into other terminals.
+
+## 🎨 Themes
+
+TUXİXİ supports customizable terminal themes.
+
+You can change themes using:
+
+`Ctrl + Shift + T`
+
+The terminal background and scrollbar also adapt to the selected theme.
+
+## ⌨️ Keyboard Shortcuts
+
+TUXİXİ includes keyboard shortcuts for everyday terminal operations, including:
+
+- `Ctrl + Shift + C` – Copy
+- `Ctrl + Shift + V` – Paste
+- `Ctrl + Shift + T` – Change theme
+- `Ctrl + Shift + N` – New window
+- `Ctrl + Shift + +` – Zoom in
+- `Ctrl + Shift + -` – Zoom out
+
+## 🗑️ Uninstallation
+
+To remove TUXİXİ, run:
 
 ```bash
-cd tuxixi
+chmod +x uninstall.sh
+./uninstall.sh
 ```
 
-Start the terminal:
+The uninstaller removes the application, desktop entry and installed icon.
 
-```bash
-python3 main.py
-```
+## 🚀 Project Status
 
-Make sure all project files remain together inside the `tuxixi` directory.
+TUXİXİ is an actively developed project. New features, improvements and bug fixes are part of its development.
 
-### Method 2: Clone the Repository
+Feedback and bug reports are welcome!
 
-Clone the repository:
+## ❤️ Contributing
 
-    git clone https://github.com/Tuxixi-project/TUXIXI-Terminal.git
+Have an idea or found a bug?
 
-Enter the project directory:
+Feel free to open an issue or contribute to the project.
 
-    cd TUXIXI-Terminal
+Every suggestion and contribution is appreciated.
 
-Start TUXIXI:
+site:tuxixi-project.github.io
+email:tuxixi_team@proton.me
+---
 
-    python3 main.py
+**TUXİXİ Terminal 2.0.0**
 
-## Contact
-
-For questions, feedback, bug reports, or other inquiries, contact the project team:
-
-**Email:** [tuxixi_team@proton.me](mailto:tuxixi_team@proton.me)
-
-**Site**   https://tuxixi-project.github.io/
-
-**TUXIXI Terminal Team**
-
-
-> **Coming soon:** TUXIXI Terminal will also be available in AppImage format. Stay tuned!
+*More freedom. More flexibility. More TUXİXİ.* 🐧
