@@ -4,41 +4,39 @@
 
 TUXİXİ is a Linux terminal emulator built with Python, GTK4 and VTE.
 
-It provides a clean interface while allowing you to use your system's real shell, such as Bash, Zsh or Fish.
+It provides a clean, modern interface while allowing you to use your system's real shell, such as Bash, Zsh or Fish.
 
-The goal of TUXİXİ is simple: a comfortable terminal with its own identity, without getting in the way of your Linux environment.
+The goal of TUXİXİ is simple: a comfortable, lightweight terminal with its own identity, without getting in the way of your Linux environment.
 
 ## ✨ Features
 
-- **Real Shell Support:** Use your system's Bash, Zsh or Fish.
-- **Custom Commands:** TUXİXİ comes with its own command-line utilities.
-- **TrueColor Support:** 24-bit colors for a better terminal experience.
-- **Custom Themes:** Change the terminal's appearance.
-- **Multiple Windows:** Open multiple terminal windows.
-- **Clipboard Support:** Copy and paste text easily.
-- **Keyboard Shortcuts:** Convenient shortcuts for everyday use.
-- **System Information:** View memory, filesystem and network information.
+- **Real Shell Support:** Use your system's Bash, Zsh or Fish seamlessly.
+- **Minimalist Tab System:** Slim top tab bar with `+` button, hover-to-reveal `×` close buttons, overflow scrolling, and independent tab sessions.
+- **Dynamic Tab Titles:** Tabs automatically display your current directory or running program (`1: ~`, `2: Projects`, `3: htop`) with smart `1..N` renumbering.
+- **Glass & Blur Modes:** Switch between **Glass Mode** (clean transparency), **Static Blur** (zero-GPU cached desktop wallpaper blur), and **Smoky Blur** (dark matte glass).
+- **19 Built-in Themes:** Instantly switch themes with live synchronization across all open windows and tabs.
+- **Custom Commands:** Built-in `tuxixi`, `ll`, and `cls` utilities available cleanly inside TUXİXİ's own environment.
+- **TrueColor Support:** 24-bit colors for a rich terminal experience.
+- **Multiple Windows & Tabs:** Open multiple independent windows or tabs with instant switching.
+- **Atomic Configuration:** Safe, validated settings stored in `~/.config/tuxixi/config.json`.
+- **System & Network Diagnostics:** View kernel, uptime, CPU load, memory, disk usage, and network/IP status in a clean layout.
 
 ## 🛠️ Built With
 
-- Python
+- Python 3
 - GTK4
-- VTE
+- VTE (3.91)
 - POSIX Shell Scripts
 
 ## 📦 Installation
 
 ### 1. Download
 
-Download the latest `tuxixi_terminal_v2.0.0.tar.gz` archive from the project's Releases page.
+Download `tuxixi_terminal_v2.1.0.tar.gz` and `install.sh` from the project's Releases page.
 
-### 2. Extract
+### 2. Run the installer
 
-Extract the downloaded archive.
-
-### 3. Run the installer
-
-Open a terminal in the directory containing `install.sh` and run:
+Place `tuxixi_terminal_v2.1.0.tar.gz` next to `install.sh` (or anywhere in your Home directory), open a terminal, and run:
 
 ```bash
 chmod +x install.sh
@@ -47,55 +45,57 @@ chmod +x install.sh
 
 The installer will automatically:
 
-- Find the TUXİXİ archive in your Home directory (excluding Trash).
-- Extract the project files.
-- Install TUXİXİ.
-- Set executable permissions for its commands.
-- Install the application icon.
-- Create a desktop entry.
+- Locate and verify `tuxixi_terminal_v2.1.0.tar.gz` (excluding Trash).
+- Extract and install TUXİXİ into `~/.local/opt/tuxixi`.
+- Configure executable permissions for its commands.
+- Install the application icons (`tuxixi-512.png`).
+- Create the desktop entry (`org.tuxixi.Terminal.desktop`) for your application menu and dock.
 
 No root permissions are required.
 
 ### Requirements
 
-- Linux
+- Linux (X11 or Wayland)
 - Python 3
 - GTK4
-- VTE
-- Python GTK4 and VTE bindings
+- VTE (GTK4 / 3.91)
+- Python GObject Introspection bindings (`PyGObject`)
 
 ## ⌨️ TUXİXİ Commands
 
-TUXİXİ includes its own commands:
+TUXİXİ includes its own built-in commands:
 
-| Command | Description |
-|---|---|
-| `tuxixi help` | Show available commands |
-| `tuxixi sys` | Display system information |
-| `tuxixi ip` | Display IP information |
-| `tuxixi ver` | Show TUXİXİ version |
-| `ll` | List files and directories |
-| `cls` | Clear the terminal |
+- `tuxixi --help` – Show available commands and shortcuts
+- `tuxixi --system` / `tuxixi --sys` – Display system status (Kernel, Uptime, Load, RAM, Disk)
+- `tuxixi --ip` – Display network interface, internal IP and external IP
+- `tuxixi --version` – Show TUXİXİ version
+- `ll` – List files and directories with human-readable sizes
+- `cls` – Clear the terminal screen
 
 These commands are available inside TUXİXİ's own shell environment. They are not globally installed into other terminals.
 
-## 🎨 Themes
+## 🎨 Themes, Glass & Blur
 
-TUXİXİ supports customizable terminal themes.
+TUXİXİ includes **19 built-in themes** along with modern visual modes:
 
-You can change themes using:
+- **Cycle Themes:** `Ctrl + Shift + T`
+- **Toggle Glass Mode (Transparency):** `Ctrl + Shift + O`
+- **Cycle Blur Modes (`Static` / `Smoky` / `Off`):** `Ctrl + Shift + B`
 
-`Ctrl + Shift + T`
-
-The terminal background and scrollbar also adapt to the selected theme.
+All changes are saved automatically and synchronized live across every open window and tab.
 
 ## ⌨️ Keyboard Shortcuts
 
-TUXİXİ includes keyboard shortcuts for everyday terminal operations, including:
+TUXİXİ includes keyboard shortcuts for everyday terminal operations:
 
+- `Ctrl + Shift + Enter` – New tab
+- `Ctrl + Shift + W` – Close active tab
+- `Alt + 1..9` / `Ctrl + Tab` – Switch between tabs
 - `Ctrl + Shift + C` – Copy
 - `Ctrl + Shift + V` – Paste
 - `Ctrl + Shift + T` – Change theme
+- `Ctrl + Shift + O` – Toggle Glass mode (transparency)
+- `Ctrl + Shift + B` – Cycle Blur mode (`Static` / `Smoky` / `Off`)
 - `Ctrl + Shift + N` – New window
 - `Ctrl + Shift + +` – Zoom in
 - `Ctrl + Shift + -` – Zoom out
@@ -109,11 +109,11 @@ chmod +x uninstall.sh
 ./uninstall.sh
 ```
 
-The uninstaller removes the application, desktop entry and installed icon.
+The uninstaller removes the application, desktop entries, and installed icons, and optionally asks if you want to remove `~/.config/tuxixi` without touching your personal shell configuration.
 
 ## 🚀 Project Status
 
-TUXİXİ is an actively developed project. New features, improvements and bug fixes are part of its development.
+TUXİXİ is an actively developed project. New features, performance improvements and bug fixes are part of its ongoing development.
 
 Feedback and bug reports are welcome!
 
@@ -125,10 +125,11 @@ Feel free to open an issue or contribute to the project.
 
 Every suggestion and contribution is appreciated.
 
-site:tuxixi-project.github.io
-email:tuxixi_team@proton.me
+- **Website:** https://tuxixi-project.github.io
+- **Email:** tuxixi_team@proton.me
+
 ---
 
-**TUXİXİ Terminal 2.0.0**
+**TUXİXİ Terminal 2.1.0**
 
 *More freedom. More flexibility. More TUXİXİ.* 🐧
