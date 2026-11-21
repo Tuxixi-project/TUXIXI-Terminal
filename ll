@@ -1,2 +1,2 @@
 #!/bin/sh
-exec ls -la --color=auto --group-directories-first "$@"
+exec ls -lah --color=auto --group-directories-first "$@"
