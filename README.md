@@ -30,28 +30,47 @@ The goal of TUXİXİ is simple: a comfortable, lightweight terminal with its own
 
 ## 📦 Installation
 
-### 1. Download
+### One-line install (recommended)
 
-Download `tuxixi_terminal_v2.1.0.tar.gz` and `install.sh` from the project's Releases page.
+Install the latest TUXİXİ release with a single command:
 
-### 2. Run the installer
+```bash
+curl -fsSL https://raw.githubusercontent.com/Tuxixi-project/TUXIXI-Terminal/main/install.sh | bash
+```
 
-Place `tuxixi_terminal_v2.1.0.tar.gz` next to `install.sh` (or anywhere in your Home directory), open a terminal, and run:
+The installer handles everything for you:
+
+- Detects your distribution and package manager.
+- Checks Python 3 and installs it automatically if it is missing.
+- Checks GTK4 / VTE / PyGObject runtime dependencies and offers to install them.
+- Downloads the latest release archive from GitHub Releases (no manual downloads).
+- Extracts and installs TUXİXİ into `~/.local/opt/tuxixi`.
+- Configures executable permissions for its commands.
+- Installs the application icons (`tuxixi-512.png`).
+- Creates the desktop entry (`org.tuxixi.Terminal.desktop`) for your application menu and dock.
+
+No root permissions are required (package installation only asks for `sudo` when something is actually missing).
+
+Prefer to review the script before running it?
+
+```bash
+curl -fsSL -o install.sh https://raw.githubusercontent.com/Tuxixi-project/TUXIXI-Terminal/main/install.sh
+less install.sh
+chmod +x install.sh && ./install.sh
+```
+
+### Manual install
+
+1. Download `tuxixi_terminal_v2.1.0.tar.gz` and `install.sh` from the project's Releases page.
+
+2. Place `tuxixi_terminal_v2.1.0.tar.gz` next to `install.sh` (or anywhere in your Home directory), open a terminal, and run:
 
 ```bash
 chmod +x install.sh
 ./install.sh
 ```
 
-The installer will automatically:
-
-- Locate and verify `tuxixi_terminal_v2.1.0.tar.gz` (excluding Trash).
-- Extract and install TUXİXİ into `~/.local/opt/tuxixi`.
-- Configure executable permissions for its commands.
-- Install the application icons (`tuxixi-512.png`).
-- Create the desktop entry (`org.tuxixi.Terminal.desktop`) for your application menu and dock.
-
-No root permissions are required.
+If a local archive is found next to the installer, it is used directly and nothing is downloaded.
 
 ### Requirements
 
