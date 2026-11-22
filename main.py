@@ -209,4 +209,4 @@ class TuxixiApplication(Gtk.Application):
 if __name__ == "__main__":
     app = TuxixiApplication()
     sys.exit(app.run(sys.argv))
-bu düzgün main.py dosyasıdır?
+
