@@ -1,135 +1,87 @@
-# ◆ TUXİXİ Terminal
+# TUXIXI Terminal
 
-**A simple, customizable terminal emulator for Linux.**
+A lightweight, customizable Linux terminal emulator built with Python 3, GTK4, and VTE.
 
-TUXİXİ is a Linux terminal emulator built with Python, GTK4 and VTE.
+![Python](https://img.shields.io/badge/Python-3-3776AB)
+![GTK4](https://img.shields.io/badge/GTK4-VTE%203.91-007ec6)
+![Platform](https://img.shields.io/badge/Platform-Linux-4c1)
+![License](https://img.shields.io/badge/License-GPL--3.0-dfb317)
+![Version](https://img.shields.io/badge/Version-2.1.0-7c3aed)
 
-It provides a clean, modern interface while allowing you to use your system's real shell, such as Bash, Zsh or Fish.
+## Features
 
-The goal of TUXİXİ is simple: a comfortable, lightweight terminal with its own identity, without getting in the way of your Linux environment.
+- Works with your real system shell (Bash, Zsh, Fish)
+- Minimalist top tab bar with dynamic titles, hover close button, and overflow scrolling
+- Glass transparency mode and dual Blur modes (Static wallpaper blur & Smoky matte)
+- 19 built-in themes with live multi-window synchronization
+- Built-in utilities (`tuxixi`, `ll`, `cls`) isolated to TUXIXI sessions
+- X11 and Wayland support
 
-## ✨ Features
+## Installation
 
-- **Real Shell Support:** Use your system's Bash, Zsh or Fish seamlessly.
-- **Minimalist Tab System:** Slim top tab bar with `+` button, hover-to-reveal `×` close buttons, overflow scrolling, and independent tab sessions.
-- **Dynamic Tab Titles:** Tabs automatically display your current directory or running program (`1: ~`, `2: Projects`, `3: htop`) with smart `1..N` renumbering.
-- **Glass & Blur Modes:** Switch between **Glass Mode** (clean transparency), **Static Blur** (zero-GPU cached desktop wallpaper blur), and **Smoky Blur** (dark matte glass).
-- **19 Built-in Themes:** Instantly switch themes with live synchronization across all open windows and tabs.
-- **Custom Commands:** Built-in `tuxixi`, `ll`, and `cls` utilities available cleanly inside TUXİXİ's own environment.
-- **TrueColor Support:** 24-bit colors for a rich terminal experience.
-- **Multiple Windows & Tabs:** Open multiple independent windows or tabs with instant switching.
-- **Atomic Configuration:** Safe, validated settings stored in `~/.config/tuxixi/config.json`.
-- **System & Network Diagnostics:** View kernel, uptime, CPU load, memory, disk usage, and network/IP status in a clean layout.
+### Quick Install (One-Line)
 
-## 🛠️ Built With
+```bash
+curl -fsSL https://raw.githubusercontent.com/Tuxixi-project/TUXIXI-Terminal/main/install.sh | bash
+```
 
-- Python 3
-- GTK4
-- VTE (3.91)
-- POSIX Shell Scripts
+### Manual / Offline Install
 
-## 📦 Installation
-
-### 1. Download
-
-Download `tuxixi_terminal_v2.1.0.tar.gz` and `install.sh` from the project's Releases page.
-
-### 2. Run the installer
-
-Place `tuxixi_terminal_v2.1.0.tar.gz` next to `install.sh` (or anywhere in your Home directory), open a terminal, and run:
+1. Download `tuxixi_terminal_v2.1.0.tar.gz` and `install.sh` from the Releases page into the same folder.
+2. Open a terminal in that folder and run:
 
 ```bash
 chmod +x install.sh
 ./install.sh
 ```
 
-The installer will automatically:
+The installer detects your distro, checks dependencies (Python 3, GTK4, VTE 3.91, PyGObject), asks before installing any missing packages, and installs TUXIXI into `~/.local/opt/tuxixi`.
 
-- Locate and verify `tuxixi_terminal_v2.1.0.tar.gz` (excluding Trash).
-- Extract and install TUXİXİ into `~/.local/opt/tuxixi`.
-- Configure executable permissions for its commands.
-- Install the application icons (`tuxixi-512.png`).
-- Create the desktop entry (`org.tuxixi.Terminal.desktop`) for your application menu and dock.
+## Commands
 
-No root permissions are required.
+Available inside TUXIXI Terminal:
 
-### Requirements
+- `tuxixi --help` – Show help and shortcuts
+- `tuxixi --system` / `tuxixi --sys` – System status
+- `tuxixi --ip` – Network and IP info
+- `tuxixi --version` – Version info
+- `ll` – Human-readable directory listing
+- `cls` – Clear terminal
 
-- Linux (X11 or Wayland)
-- Python 3
-- GTK4
-- VTE (GTK4 / 3.91)
-- Python GObject Introspection bindings (`PyGObject`)
-
-## ⌨️ TUXİXİ Commands
-
-TUXİXİ includes its own built-in commands:
-
-- `tuxixi --help` – Show available commands and shortcuts
-- `tuxixi --system` / `tuxixi --sys` – Display system status (Kernel, Uptime, Load, RAM, Disk)
-- `tuxixi --ip` – Display network interface, internal IP and external IP
-- `tuxixi --version` – Show TUXİXİ version
-- `ll` – List files and directories with human-readable sizes
-- `cls` – Clear the terminal screen
-
-These commands are available inside TUXİXİ's own shell environment. They are not globally installed into other terminals.
-
-## 🎨 Themes, Glass & Blur
-
-TUXİXİ includes **19 built-in themes** along with modern visual modes:
-
-- **Cycle Themes:** `Ctrl + Shift + T`
-- **Toggle Glass Mode (Transparency):** `Ctrl + Shift + O`
-- **Cycle Blur Modes (`Static` / `Smoky` / `Off`):** `Ctrl + Shift + B`
-
-All changes are saved automatically and synchronized live across every open window and tab.
-
-## ⌨️ Keyboard Shortcuts
-
-TUXİXİ includes keyboard shortcuts for everyday terminal operations:
+## Shortcuts
 
 - `Ctrl + Shift + Enter` – New tab
-- `Ctrl + Shift + W` – Close active tab
-- `Alt + 1..9` / `Ctrl + Tab` – Switch between tabs
-- `Ctrl + Shift + C` – Copy
-- `Ctrl + Shift + V` – Paste
+- `Ctrl + Shift + W` – Close tab
+- `Alt + 1..9` / `Ctrl + Tab` – Switch tabs
+- `Ctrl + Shift + O` – Glass mode (transparency)
+- `Ctrl + Shift + B` – Blur mode (Static / Smoky / Off)
 - `Ctrl + Shift + T` – Change theme
-- `Ctrl + Shift + O` – Toggle Glass mode (transparency)
-- `Ctrl + Shift + B` – Cycle Blur mode (`Static` / `Smoky` / `Off`)
 - `Ctrl + Shift + N` – New window
-- `Ctrl + Shift + +` – Zoom in
-- `Ctrl + Shift + -` – Zoom out
+- `Ctrl + Shift + +` / `-` – Font size
+- `Ctrl + Shift + C` / `V` – Copy / Paste
 
-## 🗑️ Uninstallation
+## Uninstallation
 
-To remove TUXİXİ, run:
+One-line uninstall:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Tuxixi-project/TUXIXI-Terminal/main/uninstall.sh | bash
+```
+
+Or run `uninstall.sh` locally:
 
 ```bash
 chmod +x uninstall.sh
 ./uninstall.sh
 ```
 
-The uninstaller removes the application, desktop entries, and installed icons, and optionally asks if you want to remove `~/.config/tuxixi` without touching your personal shell configuration.
+Removes TUXIXI files, desktop entries, and icons without touching system packages or your shell configuration.
 
-## 🚀 Project Status
+## Links
 
-TUXİXİ is an actively developed project. New features, performance improvements and bug fixes are part of its ongoing development.
-
-Feedback and bug reports are welcome!
-
-## ❤️ Contributing
-
-Have an idea or found a bug?
-
-Feel free to open an issue or contribute to the project.
-
-Every suggestion and contribution is appreciated.
-
-- **Website:** https://tuxixi-project.github.io
-- **Email:** tuxixi_team@proton.me
+- Website: https://tuxixi-project.github.io
+- Email: tuxixi_team@proton.me
 
 ---
 
-**TUXİXİ Terminal 2.1.0**
-
-*More freedom. More flexibility. More TUXİXİ.* 🐧
+**TUXIXI Terminal 2.1.0** — *More freedom. More flexibility. More TUXIXI.*
