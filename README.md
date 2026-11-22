@@ -25,7 +25,7 @@ A lightweight, customizable Linux terminal emulator built with Python 3, GTK4, a
 curl -fsSL https://raw.githubusercontent.com/Tuxixi-project/TUXIXI-Terminal/main/install.sh | bash
 ```
 
-### Manual / Offline Install
+### Manual
 
 1. Download `tuxixi_terminal_v2.1.0.tar.gz` and `install.sh` from the Releases page into the same folder.
 2. Open a terminal in that folder and run:
