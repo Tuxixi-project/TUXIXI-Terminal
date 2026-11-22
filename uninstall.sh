@@ -1,3 +1,4 @@
+
 #!/usr/bin/env bash
 
 set -e
@@ -7,12 +8,16 @@ set -e
 # ==========================================
 
 VERSION="2.1.0"
+
 APP_DIR="$HOME/.local/opt/tuxixi"
 BIN_DIR="$HOME/.local/bin"
+
 USER_DATA_DIR="${XDG_DATA_HOME:-$HOME/.local/share}"
 BASE_ICON_DIR="$USER_DATA_DIR/icons"
+
 ICON_DIR_512="$BASE_ICON_DIR/hicolor/512x512/apps"
 ICON_DIR_256="$BASE_ICON_DIR/hicolor/256x256/apps"
+
 DESKTOP_DIR="$USER_DATA_DIR/applications"
 CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/tuxixi"
 
@@ -21,10 +26,35 @@ echo "  ◆ TUXIXI TERMINAL v${VERSION} UNINSTALLER"
 echo "  ────────────────────────────────────"
 echo ""
 
-# 1. Confirm removal
-read -r -p "▸ Are you sure you want to uninstall TUXIXI? [y/N]: " ANSWER
+# ==========================================
+# Confirmation helper
+# ==========================================
 
-if [[ ! "$ANSWER" =~ ^[Yy]$ ]]; then
+confirm() {
+    local prompt="$1"
+    local answer
+
+    if [[ ! -r /dev/tty ]]; then
+        echo ""
+        echo "✗ Interactive terminal not available."
+        echo "  Run this script directly from a terminal."
+        return 1
+    fi
+
+    if ! read -r -p "$prompt" answer </dev/tty; then
+        echo ""
+        echo "✗ Could not read confirmation."
+        return 1
+    fi
+
+    [[ "$answer" =~ ^[Yy]$ ]]
+}
+
+# ==========================================
+# 1. Confirm removal
+# ==========================================
+
+if ! confirm "▸ Are you sure you want to uninstall TUXIXI? [y/N]: "; then
     echo ""
     echo "✗ Uninstallation cancelled."
     exit 0
@@ -32,7 +62,10 @@ fi
 
 echo ""
 
+# ==========================================
 # 2. Remove application
+# ==========================================
+
 echo "▸ Removing application..."
 
 if [[ -d "$APP_DIR" ]]; then
@@ -42,7 +75,10 @@ else
     echo "• Application directory not found."
 fi
 
+# ==========================================
 # 3. Remove CLI command
+# ==========================================
+
 echo "▸ Removing CLI command..."
 
 if [[ -e "$BIN_DIR/tuxixi" || -L "$BIN_DIR/tuxixi" ]]; then
@@ -52,10 +88,14 @@ else
     echo "• CLI command not found."
 fi
 
+# ==========================================
 # 4. Remove desktop entries
+# ==========================================
+
 echo "▸ Removing desktop entries..."
 
 REMOVED_DESKTOP=0
+
 for df in "tuxixi.desktop" "org.tuxixi.Terminal.desktop"; do
     if [[ -f "$DESKTOP_DIR/$df" || -L "$DESKTOP_DIR/$df" ]]; then
         rm -f -- "$DESKTOP_DIR/$df"
@@ -69,10 +109,14 @@ else
     echo "• Desktop entries not found."
 fi
 
+# ==========================================
 # 5. Remove icons
+# ==========================================
+
 echo "▸ Removing icons..."
 
 REMOVED_ICON=0
+
 for dir in "$BASE_ICON_DIR" "$ICON_DIR_512" "$ICON_DIR_256"; do
     for icon in "tuxixi.png" "tuxixi-512.png" "org.tuxixi.Terminal.png"; do
         if [[ -f "$dir/$icon" || -L "$dir/$icon" ]]; then
@@ -88,11 +132,14 @@ else
     echo "• Icons not found."
 fi
 
+# ==========================================
 # 6. Optionally remove configuration
+# ==========================================
+
 if [[ -d "$CONFIG_DIR" ]]; then
     echo ""
-    read -r -p "▸ Also remove TUXIXI settings ($CONFIG_DIR)? [y/N]: " REMOVE_CFG
-    if [[ "$REMOVE_CFG" =~ ^[Yy]$ ]]; then
+
+    if confirm "▸ Also remove TUXIXI settings ($CONFIG_DIR)? [y/N]: "; then
         rm -rf -- "$CONFIG_DIR"
         echo "✓ Configuration removed."
     else
@@ -100,16 +147,23 @@ if [[ -d "$CONFIG_DIR" ]]; then
     fi
 fi
 
-# 7. Refresh desktop & icon caches silently
+# ==========================================
+# 7. Refresh desktop & icon caches
+# ==========================================
+
 if command -v update-desktop-database >/dev/null 2>&1; then
     update-desktop-database "$DESKTOP_DIR" 2>/dev/null || true
 fi
 
-if command -v gtk-update-icon-cache >/dev/null 2>&1 && [[ -d "$BASE_ICON_DIR/hicolor" ]]; then
+if command -v gtk-update-icon-cache >/dev/null 2>&1 &&
+   [[ -d "$BASE_ICON_DIR/hicolor" ]]; then
     gtk-update-icon-cache -f -t "$BASE_ICON_DIR/hicolor" 2>/dev/null || true
 fi
 
+# ==========================================
 # 8. Finish
+# ==========================================
+
 echo ""
 echo "  ────────────────────────────────────"
 echo "  ◆ TUXIXI v${VERSION} UNINSTALLED!"
