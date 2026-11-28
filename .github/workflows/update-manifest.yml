@@ -1,0 +1,41 @@
+name: Auto-Update Manifest
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "main.py"
+      - "ui.py"
+      - "terminal.py"
+      - "settings.py"
+      - "themes.py"
+      - "updater.py"
+      - "tuxixi-512.png"
+      - "bin/**"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-manifest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Generate manifest.json
+        run: python3 updater.py --generate-manifest
+
+      - name: Commit updated manifest.json
+        run: |
+          if git diff --quiet manifest.json; then
+            echo "manifest.json is already up to date."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add manifest.json
+          git commit -m "chore(manifest): auto-update manifest.json [skip ci]"
+          git push
