@@ -1,0 +1,76 @@
+{
+  "schema": 1,
+  "version": "2.1.1",
+  "files": [
+    {
+      "path": "main.py",
+      "group": "self",
+      "sha256": "197a7c0c5d03259a6c42580367191ea656f0cfb81c14aa6312a035e16e1119ec",
+      "size": 8651,
+      "executable": true
+    },
+    {
+      "path": "ui.py",
+      "group": "self",
+      "sha256": "5b7af0f1c8b8df99886b5f6a459c53db6e9350ccb4d330c53ba19aa91a7be3e7",
+      "size": 40771,
+      "executable": false
+    },
+    {
+      "path": "terminal.py",
+      "group": "self",
+      "sha256": "d8295ab292f818f2c066785d27a0b96ded3293587972db702ce8d523e69fb271",
+      "size": 14627,
+      "executable": false
+    },
+    {
+      "path": "settings.py",
+      "group": "self",
+      "sha256": "b78f398264f93ae3bed3742dd6b719b5b101ff1006f23cd0e76812c5942d634d",
+      "size": 5372,
+      "executable": false
+    },
+    {
+      "path": "updater.py",
+      "group": "self",
+      "sha256": "771db1f3a730498c96f8850c97307dc7debd5419b0a5455fcb296f1fc00fa4de",
+      "size": 24052,
+      "executable": false
+    },
+    {
+      "path": "bin/tuxixi",
+      "group": "self",
+      "sha256": "074c9a034ace794a01d07df4763ea729f3489703066953bb72bdc44db9da92b7",
+      "size": 8590,
+      "executable": true
+    },
+    {
+      "path": "bin/ll",
+      "group": "self",
+      "sha256": "47208f8d6947be7acc890c005e4eabca600bec37c2ebb0f748efad45cf164958",
+      "size": 67,
+      "executable": true
+    },
+    {
+      "path": "bin/cls",
+      "group": "self",
+      "sha256": "d1e06d04eac118b5f3195cf8e6cb3002988fd35d6d504c7a23acede6c968d70c",
+      "size": 114,
+      "executable": true
+    },
+    {
+      "path": "tuxixi-512.png",
+      "group": "self",
+      "sha256": "4e2fe206160aa94e762dd10a9eb7f55c580c4ab37b2a92b2b3da3ffd3136be60",
+      "size": 94144,
+      "executable": false
+    },
+    {
+      "path": "themes.py",
+      "group": "theme",
+      "sha256": "ea60577102c5f5ea8a3da5b6d14db4968933fd204e8436a75b8c9262beebeea8",
+      "size": 21806,
+      "executable": false
+    }
+  ]
+}
