@@ -7,7 +7,7 @@ set -euo pipefail
 #
 # Install TUXIXI with a single command, no manual downloads:
 #
-#   curl -fsSL https://raw.githubusercontent.com/Tuxixi-project/TUXIXI-Terminal/main/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/Tuxixi-Foundation/TUXIXI-Terminal/main/install.sh | bash
 #
 # The installer will:
 #   1. Detect your distribution and package manager
@@ -18,7 +18,7 @@ set -euo pipefail
 #   5. Create icons and the desktop entry
 # ==========================================================
 
-REPO="Tuxixi-project/TUXIXI-Terminal"
+REPO="Tuxixi-Foundation/TUXIXI-Terminal"
 GH_URL="https://github.com/${REPO}"
 
 APP_NAME="TUXIXI Terminal"
