@@ -7,7 +7,7 @@ set -euo pipefail
 #
 # Uninstall TUXIXI with a single command:
 #
-#   curl -fsSL https://raw.githubusercontent.com/Tuxixi-project/TUXIXI-Terminal/main/uninstall.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/Tuxixi-Foundation/TUXIXI-Terminal/main/uninstall.sh | bash
 #
 # The uninstaller will:
 #   1. Ask for confirmation (works even when piped via curl | bash)
