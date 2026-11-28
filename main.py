@@ -115,17 +115,38 @@ class TuxixiApplication(Gtk.Application):
             text_hex = fg_hex
 
         css = f"""
-        window, window.background {{
+        window.tuxixi-main-window, window.tuxixi-main-window.background {{
             background-color: {win_bg};
             background-image: {win_image};
             padding: 0;
             margin: 0;
         }}
-        vte-terminal {{
+        window.tuxixi-main-window vte-terminal {{
             background-color: {term_bg};
         }}
-        scrollbar {{
+        window.tuxixi-main-window scrollbar {{
             background-color: transparent;
+        }}
+        .tuxixi-pane {{
+            border: 1px solid transparent;
+            transition: opacity 120ms ease, border-color 120ms ease;
+        }}
+        .tuxixi-pane.tuxixi-pane-active {{
+            border: 1px solid alpha(#c084fc, 0.55);
+            opacity: 1.0;
+        }}
+        .tuxixi-pane.tuxixi-pane-inactive {{
+            border: 1px solid alpha({text_hex}, 0.08);
+            opacity: 0.84;
+        }}
+        window.tuxixi-main-window paned > separator {{
+            min-width: 2px;
+            min-height: 2px;
+            background-color: alpha({text_hex}, 0.16);
+            transition: background-color 120ms ease;
+        }}
+        window.tuxixi-main-window paned > separator:hover {{
+            background-color: alpha(#c084fc, 0.55);
         }}
         .tuxixi-static-blur-pic {{
             filter: blur(8px) brightness(0.62) saturate(1.10);
@@ -200,6 +221,34 @@ class TuxixiApplication(Gtk.Application):
             border-radius: 4px;
             padding: 1px 7px;
             margin-right: 2px;
+        }}
+        .tuxixi-studio-heading {{
+            font-weight: 600;
+            font-size: 12px;
+            opacity: 0.85;
+        }}
+        .tuxixi-studio-hex {{
+            font-family: Monospace;
+            font-size: 12px;
+            opacity: 0.80;
+        }}
+        .tuxixi-studio-save {{
+            font-weight: 600;
+            padding: 6px 14px;
+            border-radius: 6px;
+        }}
+        .tuxixi-studio-delete {{
+            padding: 6px 12px;
+            border-radius: 6px;
+            color: #f87171;
+        }}
+        .tuxixi-studio-delete:disabled {{
+            opacity: 0.45;
+        }}
+        .tuxixi-studio-status {{
+            font-size: 11px;
+            opacity: 0.75;
+            min-height: 16px;
         }}
         """
         if self.css_provider:
