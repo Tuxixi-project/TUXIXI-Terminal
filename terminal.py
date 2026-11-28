@@ -1,6 +1,7 @@
 import os
 import pwd
 import stat
+import sys
 import gi
 
 gi.require_version("Vte", "3.91")
@@ -8,7 +9,7 @@ gi.require_version("Gdk", "4.0")
 gi.require_version("Gtk", "4.0")
 
 from gi.repository import Vte, GLib, Gio, GObject, Pango, Gdk, Gtk
-from themes import get_colors
+from themes import get_colors, get_palette
 
 MANAGED_BINARIES = ("tuxixi", "ll", "cls")
 
@@ -51,6 +52,21 @@ class TuxixiTerminal(Gtk.Box):
             None,
             (),
         ),
+        "request-split": (
+            GObject.SignalFlags.RUN_LAST,
+            None,
+            (str,),
+        ),
+        "request-focus-pane": (
+            GObject.SignalFlags.RUN_LAST,
+            None,
+            (str,),
+        ),
+        "pane-focused": (
+            GObject.SignalFlags.RUN_LAST,
+            None,
+            (),
+        ),
         "request-switch-tab": (
             GObject.SignalFlags.RUN_LAST,
             None,
@@ -60,6 +76,11 @@ class TuxixiTerminal(Gtk.Box):
             GObject.SignalFlags.RUN_LAST,
             None,
             (int,),
+        ),
+        "request-theme-studio": (
+            GObject.SignalFlags.RUN_LAST,
+            None,
+            (),
         ),
         "title-changed": (
             GObject.SignalFlags.RUN_LAST,
@@ -75,9 +96,13 @@ class TuxixiTerminal(Gtk.Box):
 
     def __init__(self, settings_manager, initial_cwd=None):
         super().__init__(orientation=Gtk.Orientation.VERTICAL, spacing=0)
+        self.add_css_class("tuxixi-pane")
         self.settings = settings_manager
         self.initial_cwd = initial_cwd or os.path.expanduser("~")
         self._banner_proc = None
+        self._cancellable = Gio.Cancellable()
+        self._child_pid = None
+        self._closed = False
         self._settings_handler_id = None
 
         self.vte = Vte.Terminal()
@@ -93,6 +118,10 @@ class TuxixiTerminal(Gtk.Box):
         key_controller.connect("key-pressed", self._on_key_pressed)
         self.vte.add_controller(key_controller)
 
+        focus_controller = Gtk.EventControllerFocus()
+        focus_controller.connect("enter", self._on_focus_enter)
+        self.vte.add_controller(focus_controller)
+
         self.vte.connect("child-exited", self._on_child_exited)
         self.vte.connect("window-title-changed", self._on_vte_title_changed)
         self.vte.connect("current-directory-uri-changed", self._on_vte_title_changed)
@@ -107,6 +136,15 @@ class TuxixiTerminal(Gtk.Box):
         self._start_session()
 
     def cleanup(self):
+        self._closed = True
+        if self._cancellable is not None:
+            self._cancellable.cancel()
+        if self._banner_proc is not None:
+            try:
+                self._banner_proc.force_exit()
+            except Exception:
+                pass
+            self._banner_proc = None
         if self._settings_handler_id is not None:
             if self.settings.handler_is_connected(self._settings_handler_id):
                 self.settings.disconnect(self._settings_handler_id)
@@ -114,6 +152,10 @@ class TuxixiTerminal(Gtk.Box):
 
     def _on_destroy(self, _widget):
         self.cleanup()
+
+    def _on_focus_enter(self, _controller):
+        if not self._closed:
+            self.emit("pane-focused")
 
     def grab_terminal_focus(self):
         self.vte.grab_focus()
@@ -130,12 +172,10 @@ class TuxixiTerminal(Gtk.Box):
         return self.initial_cwd
 
     def get_dynamic_title(self):
-        """VTE-nin başlıq və ya cari qovluq məlumatından qısa, oxunaqlı tab adı çıxarır."""
         home = os.path.expanduser("~")
         raw_title = (self.vte.get_window_title() or "").strip()
 
         if raw_title:
-            # 'user@host: ~/Projeler' formatındadırsa yalnız sağ tərəfi götür
             if ":" in raw_title and "@" in raw_title.split(":", 1)[0]:
                 raw_title = raw_title.split(":", 1)[1].strip()
 
@@ -145,14 +185,12 @@ class TuxixiTerminal(Gtk.Box):
             if raw_title in ("~", "/"):
                 return raw_title
 
-            # Əgər yol şəklindədirsə ('~/Projeler/tuxixi'), yalnız son qovluq adını götür
             if "/" in raw_title and not raw_title.startswith("-"):
                 base = os.path.basename(raw_title.rstrip("/"))
                 if base:
                     return base
             return raw_title
 
-        # Əgər window-title yoxdursa, cari qovluq URI-sindən (OSC 7) adı çıxar
         cwd = self.get_current_cwd()
         if cwd:
             if os.path.normpath(cwd) == os.path.normpath(home):
@@ -186,12 +224,16 @@ class TuxixiTerminal(Gtk.Box):
         is_glass = transparent or blur_mode in ("static", "smoky")
 
         bg, fg = get_colors(theme_name, transparent=transparent, blur_mode=blur_mode)
+        palette = get_palette(theme_name, transparent=transparent, blur_mode=blur_mode)
 
         if hasattr(self.vte, "set_clear_background"):
             self.vte.set_clear_background(not is_glass)
 
-        self.vte.set_color_background(bg)
-        self.vte.set_color_foreground(fg)
+        if hasattr(self.vte, "set_colors"):
+            self.vte.set_colors(fg, bg, palette)
+        else:
+            self.vte.set_color_background(bg)
+            self.vte.set_color_foreground(fg)
 
     def _get_default_shell(self):
         try:
@@ -251,25 +293,31 @@ class TuxixiTerminal(Gtk.Box):
                 Gio.SubprocessFlags.STDOUT_PIPE | Gio.SubprocessFlags.STDERR_SILENCE,
             )
             self._banner_proc.communicate_utf8_async(
-                None, None, self._on_banner_ready, bin_dir
+                None, self._cancellable, self._on_banner_ready, bin_dir
             )
         except GLib.Error:
             self._banner_proc = None
             self._spawn_shell_pty(bin_dir)
 
     def _on_banner_ready(self, proc, result, bin_dir):
+        if self._closed:
+            self._banner_proc = None
+            return
         try:
             ok, stdout, _ = proc.communicate_utf8_finish(result)
-            if ok and stdout:
+            if ok and stdout and not self._closed:
                 formatted = stdout.replace("\n", "\r\n").encode("utf-8")
                 self.vte.feed(formatted)
         except GLib.Error:
             pass
         finally:
             self._banner_proc = None
-            self._spawn_shell_pty(bin_dir)
+            if not self._closed:
+                self._spawn_shell_pty(bin_dir)
 
     def _spawn_shell_pty(self, bin_dir):
+        if self._closed:
+            return
         shell = self._get_default_shell()
         argv = self._get_shell_argv(shell)
 
@@ -292,9 +340,15 @@ class TuxixiTerminal(Gtk.Box):
             else os.path.expanduser("~")
         )
 
-        def on_spawn_complete(_terminal, _pid, error, _user_data=None):
+        def on_spawn_complete(_terminal, pid, error, _user_data=None):
             if error:
-                print(f"Error: Shell did not work. - {error.message}")
+                if not self._closed:
+                    print(
+                        f"Error: Shell did not work. - {error.message}",
+                        file=sys.stderr,
+                    )
+            else:
+                self._child_pid = pid
 
         self.vte.spawn_async(
             Vte.PtyFlags.DEFAULT,
@@ -305,7 +359,7 @@ class TuxixiTerminal(Gtk.Box):
             None,
             None,
             -1,
-            None,
+            self._cancellable,
             on_spawn_complete,
             None,
         )
@@ -350,8 +404,14 @@ class TuxixiTerminal(Gtk.Box):
         if keyval in (Gdk.KEY_minus, Gdk.KEY_underscore, Gdk.KEY_KP_Subtract):
             self.settings.change_font_size(-1)
             return True
+        if keyval in (Gdk.KEY_0, Gdk.KEY_parenright, Gdk.KEY_KP_0):
+            self.settings.reset_font_size()
+            return True
         if keyval in (Gdk.KEY_T, Gdk.KEY_t):
             self.settings.cycle_theme()
+            return True
+        if keyval in (Gdk.KEY_P, Gdk.KEY_p):
+            self.emit("request-theme-studio")
             return True
         if keyval in (Gdk.KEY_O, Gdk.KEY_o):
             self.settings.toggle_transparency()
@@ -361,6 +421,24 @@ class TuxixiTerminal(Gtk.Box):
             return True
         if keyval in (Gdk.KEY_Return, Gdk.KEY_KP_Enter):
             self.emit("request-new-tab")
+            return True
+        if keyval in (Gdk.KEY_D, Gdk.KEY_d):
+            self.emit("request-split", "horizontal")
+            return True
+        if keyval in (Gdk.KEY_E, Gdk.KEY_e):
+            self.emit("request-split", "vertical")
+            return True
+        if keyval == Gdk.KEY_Left:
+            self.emit("request-focus-pane", "left")
+            return True
+        if keyval == Gdk.KEY_Right:
+            self.emit("request-focus-pane", "right")
+            return True
+        if keyval == Gdk.KEY_Up:
+            self.emit("request-focus-pane", "up")
+            return True
+        if keyval == Gdk.KEY_Down:
+            self.emit("request-focus-pane", "down")
             return True
         if keyval in (Gdk.KEY_W, Gdk.KEY_w):
             self.emit("request-close-tab")
