@@ -1,0 +1,170 @@
+#!/bin/sh
+VERSION="2.1.1"
+
+# TUXIXI Color Palette
+RESET='\033[0m'
+BOLD='\033[1m'
+
+PURPLE='\033[38;2;192;132;252m'
+CYAN='\033[38;2;34;211;238m'
+LIME='\033[38;2;163;230;53m'
+AMBER='\033[38;2;251;191;36m'
+SLATE='\033[38;2;148;163;184m'
+RED='\033[38;2;248;113;113m'
+
+
+show_welcome() {
+    printf "%b◆ TUXIXI Terminal%b %bv%s%b %b— Type%b %btuxixi --help%b %bto view available commands and shortcuts.%b\n\n" \
+        "${BOLD}${PURPLE}" "${RESET}" "${SLATE}" "${VERSION}" "${RESET}" \
+        "${SLATE}" "${RESET}" "${LIME}" "${RESET}" "${SLATE}" "${RESET}"
+}
+
+
+show_help() {
+    printf '\n'
+    printf "%b◆ TUXIXI TERMINAL%b %bv%s%b\n" "${BOLD}${PURPLE}" "${RESET}" "${SLATE}" "${VERSION}" "${RESET}"
+    printf "%b────────────────────────────────────────%b\n\n" "${SLATE}" "${RESET}"
+
+    printf "%bCOMMANDS%b\n" "${BOLD}${CYAN}" "${RESET}"
+    printf "  %btuxixi --help%b          %bDisplay help%b\n" "${LIME}" "${RESET}" "${SLATE}" "${RESET}"
+    printf "  %btuxixi --version%b       %bVersion information%b\n" "${LIME}" "${RESET}" "${SLATE}" "${RESET}"
+    printf "  %btuxixi --system%b        %bSystem information%b\n" "${LIME}" "${RESET}" "${SLATE}" "${RESET}"
+    printf "  %btuxixi --sys%b           %bSystem information (short)%b\n" "${LIME}" "${RESET}" "${SLATE}" "${RESET}"
+    printf "  %btuxixi --ip%b            %bNetwork information%b\n" "${LIME}" "${RESET}" "${SLATE}" "${RESET}"
+    printf "  %btuxixi update%b          %bUpdate files + themes (verified manifest)%b\n" "${LIME}" "${RESET}" "${SLATE}" "${RESET}"
+    printf "  %btuxixi update --self%b   %bUpdate the tuxixi files itself%b\n" "${LIME}" "${RESET}" "${SLATE}" "${RESET}"
+    printf "  %btuxixi update --theme%b  %bSync themes from the repository%b\n" "${LIME}" "${RESET}" "${SLATE}" "${RESET}"
+    printf "  %btuxixi update --check%b  %bCheck updates via manifest without downloading%b\n" "${LIME}" "${RESET}" "${SLATE}" "${RESET}"
+    printf "  %btuxixi update --ref X%b  %bUpdate from a specific branch or release tag%b\n\n" "${LIME}" "${RESET}" "${SLATE}" "${RESET}"
+
+    printf "%bUTILITIES%b\n" "${BOLD}${CYAN}" "${RESET}"
+    printf "  %bll%b                     %bList directory contents%b\n" "${LIME}" "${RESET}" "${SLATE}" "${RESET}"
+    printf "  %bcls%b                    %bClear terminal%b\n\n" "${LIME}" "${RESET}" "${SLATE}" "${RESET}"
+
+    printf "%bKEYBOARD SHORTCUTS%b\n" "${BOLD}${CYAN}" "${RESET}"
+    printf "  %bCtrl+Shift+C%b           %bCopy%b\n" "${AMBER}" "${RESET}" "${SLATE}" "${RESET}"
+    printf "  %bCtrl+Shift+V%b           %bPaste cleanly%b\n" "${AMBER}" "${RESET}" "${SLATE}" "${RESET}"
+    printf "  %bCtrl+Shift+Enter%b       %bNew tab%b\n" "${AMBER}" "${RESET}" "${SLATE}" "${RESET}"
+    printf "  %bCtrl+Shift+D%b           %bSplit pane right (side by side)%b\n" "${AMBER}" "${RESET}" "${SLATE}" "${RESET}"
+    printf "  %bCtrl+Shift+E%b           %bSplit pane down (top / bottom)%b\n" "${AMBER}" "${RESET}" "${SLATE}" "${RESET}"
+    printf "  %bCtrl+Shift+Arrows%b      %bMove focus between split panes%b\n" "${AMBER}" "${RESET}" "${SLATE}" "${RESET}"
+    printf "  %bCtrl+Shift+W%b           %bClose pane / tab%b\n" "${AMBER}" "${RESET}" "${SLATE}" "${RESET}"
+    printf "  %bAlt+1..9 / Ctrl+Tab%b    %bSwitch between tabs%b\n" "${AMBER}" "${RESET}" "${SLATE}" "${RESET}"
+    printf "  %bCtrl+Shift+T%b           %bChange theme%b\n" "${AMBER}" "${RESET}" "${SLATE}" "${RESET}"
+    printf "  %bCtrl+Shift+P%b           %bOpen Theme Studio (visual color picker)%b\n" "${AMBER}" "${RESET}" "${SLATE}" "${RESET}"
+    printf "  %bCtrl+Shift+O%b           %bToggle glass mode (transparency)%b\n" "${AMBER}" "${RESET}" "${SLATE}" "${RESET}"
+    printf "  %bCtrl+Shift+B%b           %bCycle blur (Static / Smoky / Off)%b\n" "${AMBER}" "${RESET}" "${SLATE}" "${RESET}"
+    printf "  %bCtrl+Shift++%b           %bIncrease font size%b\n" "${AMBER}" "${RESET}" "${SLATE}" "${RESET}"
+    printf "  %bCtrl+Shift+-%b           %bDecrease font size%b\n" "${AMBER}" "${RESET}" "${SLATE}" "${RESET}"
+    printf "  %bCtrl+Shift+0%b           %bReset font size%b\n" "${AMBER}" "${RESET}" "${SLATE}" "${RESET}"
+    printf "  %bCtrl+Shift+N%b           %bNew window%b\n\n" "${AMBER}" "${RESET}" "${SLATE}" "${RESET}"
+
+    printf "%b◆%b %bBuilt for terminal enthusiasts%b\n\n" "${PURPLE}" "${RESET}" "${SLATE}" "${RESET}"
+}
+
+
+show_sys() {
+    printf "\n%b◆ SYSTEM STATUS%b\n" "${BOLD}${PURPLE}" "${RESET}"
+    printf "%b────────────────────────────────────────%b\n\n" "${SLATE}" "${RESET}"
+
+    kernel=$(uname -sr 2>/dev/null || printf "Unknown")
+    uptime_str=$(uptime -p 2>/dev/null | sed 's/^up //')
+    [ -z "$uptime_str" ] && uptime_str="Unavailable"
+
+    load_avg=$(awk '{print $1 " " $2 " " $3}' /proc/loadavg 2>/dev/null || printf "Unavailable")
+
+    mem_info=$(free -h 2>/dev/null | awk '/^Mem:/ {printf "%s / %s", $3, $2}')
+    [ -z "$mem_info" ] && mem_info="Unavailable"
+
+    disk_info=$(df -h / 2>/dev/null | awk 'NR==2 {printf "%s / %s (%s)", $3, $2, $5}')
+    [ -z "$disk_info" ] && disk_info="Unavailable"
+
+    printf "%b▸ KERNEL%b        %b%s%b\n" "${CYAN}" "${RESET}" "${LIME}" "$kernel" "${RESET}"
+    printf "%b▸ UPTIME%b        %b%s%b\n" "${CYAN}" "${RESET}" "${LIME}" "$uptime_str" "${RESET}"
+    printf "%b▸ LOAD AVG%b      %b%s%b\n" "${CYAN}" "${RESET}" "${LIME}" "$load_avg" "${RESET}"
+    printf "%b▸ MEMORY%b        %b%s%b\n" "${CYAN}" "${RESET}" "${LIME}" "$mem_info" "${RESET}"
+    printf "%b▸ ROOT DISK%b     %b%s%b\n" "${CYAN}" "${RESET}" "${LIME}" "$disk_info" "${RESET}"
+
+    printf "\n%b◆%b %bSystem diagnostics complete%b\n\n" "${PURPLE}" "${RESET}" "${SLATE}" "${RESET}"
+}
+
+
+show_ip() {
+    printf "\n%b◆ NETWORK INFORMATION%b\n" "${BOLD}${PURPLE}" "${RESET}"
+    printf "%b────────────────────────────────────────%b\n\n" "${SLATE}" "${RESET}"
+
+    route_info=$(ip -4 route get 1.1.1.1 2>/dev/null)
+    internal_ip=$(printf "%s" "$route_info" | awk '{for(i=1;i<=NF;i++) if($i=="src"){print $(i+1); exit}}')
+    iface=$(printf "%s" "$route_info" | awk '{for(i=1;i<=NF;i++) if($i=="dev"){print $(i+1); exit}}')
+
+    if [ -z "$internal_ip" ]; then
+        internal_ip=$(hostname -I 2>/dev/null | awk '{print $1}')
+    fi
+
+    printf "%b▸ INTERNAL IP%b   " "${CYAN}" "${RESET}"
+    if [ -n "$internal_ip" ]; then
+        if [ -n "$iface" ]; then
+            printf "%b%s%b %b(%s)%b\n" "${LIME}" "$internal_ip" "${RESET}" "${SLATE}" "$iface" "${RESET}"
+        else
+            printf "%b%s%b\n" "${LIME}" "$internal_ip" "${RESET}"
+        fi
+    else
+        printf "%bUnavailable%b\n" "${RED}" "${RESET}"
+    fi
+
+    printf "%b▸ EXTERNAL IP%b   " "${CYAN}" "${RESET}"
+    if [ -z "$internal_ip" ]; then
+        printf "%bOffline%b\n" "${RED}" "${RESET}"
+    elif command -v curl >/dev/null 2>&1; then
+        external_ip=$(curl -fsS --connect-timeout 1 --max-time 2 https://api.ipify.org 2>/dev/null)
+        if [ -n "$external_ip" ]; then
+            printf "%b%s%b\n" "${LIME}" "$external_ip" "${RESET}"
+        else
+            printf "%bUnavailable%b\n" "${RED}" "${RESET}"
+        fi
+    else
+        printf "%bcurl is not installed%b\n" "${AMBER}" "${RESET}"
+    fi
+
+    printf "\n%b◆%b %bNetwork diagnostics complete%b\n\n" "${PURPLE}" "${RESET}" "${SLATE}" "${RESET}"
+}
+
+
+run_update() {
+    if [ -n "$TUXIXI_BIN_DIR" ]; then
+        bin_dir="$TUXIXI_BIN_DIR"
+    else
+        script_path=$(readlink -f "$0" 2>/dev/null || printf '%s' "$0")
+        bin_dir=$(dirname "$script_path")
+    fi
+
+    if [ -f "${bin_dir}/../updater.py" ]; then
+        updater_py="${bin_dir}/../updater.py"
+    elif [ -f "${bin_dir}/updater.py" ]; then
+        updater_py="${bin_dir}/updater.py"
+    else
+        printf '%bError:%b updater.py not found.\n' "${RED}" "${RESET}" >&2
+        exit 1
+    fi
+    shift
+    exec python3 "$updater_py" "$@"
+}
+
+
+case "$1" in
+    --welcome) show_welcome ;;
+    --help) show_help ;;
+    --version) printf "%b◆ TUXIXI Terminal%b v%s\n" "${BOLD}${PURPLE}" "${RESET}" "$VERSION" ;;
+    --system|--sys) show_sys ;;
+    --ip) show_ip ;;
+    update) run_update "$@" ;;
+    "")
+        printf 'Usage: %btuxixi --help%b\n' "${LIME}" "${RESET}" >&2
+        exit 2
+        ;;
+    *)
+        printf '%bUnknown command:%b %s\n' "${RED}" "${RESET}" "$1" >&2
+        printf 'Run %b"tuxixi --help"%b for available commands.\n' "${LIME}" "${RESET}" >&2
+        exit 2
+        ;;
+esac
