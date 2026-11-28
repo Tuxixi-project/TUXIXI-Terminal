@@ -40,8 +40,8 @@
     {
       "path": "bin/tuxixi",
       "group": "self",
-      "sha256": "074c9a034ace794a01d07df4763ea729f3489703066953bb72bdc44db9da92b7",
-      "size": 8590,
+      "sha256": "18a71be74cecdb20cad32101e49a7a9bd3b792a239cb481dcb723fb1598f27f6",
+      "size": 8586,
       "executable": true
     },
     {
