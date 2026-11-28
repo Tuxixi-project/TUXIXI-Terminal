@@ -49,7 +49,7 @@ show_help() {
     printf "  %bCtrl+Shift+E%b           %bSplit pane down (top / bottom)%b\n" "${AMBER}" "${RESET}" "${SLATE}" "${RESET}"
     printf "  %bCtrl+Shift+Arrows%b      %bMove focus between split panes%b\n" "${AMBER}" "${RESET}" "${SLATE}" "${RESET}"
     printf "  %bCtrl+Shift+W%b           %bClose pane / tab%b\n" "${AMBER}" "${RESET}" "${SLATE}" "${RESET}"
-    printf "  %bAlt+ / Ctrl+Tab%b    %bSwitch between tabs%b\n" "${AMBER}" "${RESET}" "${SLATE}" "${RESET}"
+    printf "  %bAlt+number / Ctrl+Tab%b    %bSwitch between tabs%b\n" "${AMBER}" "${RESET}" "${SLATE}" "${RESET}"
     printf "  %bCtrl+Shift+T%b           %bChange theme%b\n" "${AMBER}" "${RESET}" "${SLATE}" "${RESET}"
     printf "  %bCtrl+Shift+P%b           %bOpen Theme Studio (visual color picker)%b\n" "${AMBER}" "${RESET}" "${SLATE}" "${RESET}"
     printf "  %bCtrl+Shift+O%b           %bToggle glass mode (transparency)%b\n" "${AMBER}" "${RESET}" "${SLATE}" "${RESET}"
