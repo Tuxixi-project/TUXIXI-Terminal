@@ -9,6 +9,8 @@ gi.require_version("GObject", "2.0")
 from gi.repository import GLib, GObject
 from themes import THEME_NAMES, BLUR_MODES
 
+APP_VERSION = "2.1.1"
+
 DEFAULT_SETTINGS = {
     "font": "Monospace",
     "font_size": 11,
@@ -35,32 +37,47 @@ class SettingsManager(GObject.Object):
         self.config_path = config_path
         self._data = self._load()
 
+    def _validate_value(self, key, value):
+        if key == "font":
+            if isinstance(value, str) and value.strip():
+                return True, value.strip()
+            return False, None
+
+        if key == "font_size":
+            if isinstance(value, int) and not isinstance(value, bool):
+                return True, max(6, min(48, value))
+            return False, None
+
+        if key == "theme":
+            if isinstance(value, str) and value in THEME_NAMES:
+                return True, value
+            return False, None
+
+        if key == "transparent":
+            if isinstance(value, bool):
+                return True, value
+            return False, None
+
+        if key == "blur_mode":
+            if isinstance(value, str) and value in BLUR_MODES:
+                return True, value
+            return False, None
+
+        return True, value
+
     def _validate(self, raw):
         if not isinstance(raw, dict):
             return DEFAULT_SETTINGS.copy()
 
         validated = DEFAULT_SETTINGS.copy()
 
-        font = raw.get("font")
-        if isinstance(font, str) and font.strip():
-            validated["font"] = font.strip()
+        for key in ("font", "font_size", "theme", "transparent", "blur_mode"):
+            if key in raw:
+                ok, clean_val = self._validate_value(key, raw.get(key))
+                if ok:
+                    validated[key] = clean_val
 
-        font_size = raw.get("font_size")
-        if isinstance(font_size, int) and not isinstance(font_size, bool):
-            validated["font_size"] = max(6, min(48, font_size))
-
-        theme = raw.get("theme")
-        if isinstance(theme, str) and theme in THEME_NAMES:
-            validated["theme"] = theme
-
-        transparent = raw.get("transparent")
-        if isinstance(transparent, bool):
-            validated["transparent"] = transparent
-
-        blur_mode = raw.get("blur_mode")
-        if isinstance(blur_mode, str) and blur_mode in BLUR_MODES:
-            validated["blur_mode"] = blur_mode
-        elif raw.get("blur") is True:
+        if "blur_mode" not in raw and raw.get("blur") is True:
             validated["blur_mode"] = "static"
 
         return validated
@@ -109,17 +126,24 @@ class SettingsManager(GObject.Object):
     def get(self, key, default=None):
         return self._data.get(key, default)
 
-    def set(self, key, value):
-        if self._data.get(key) == value:
-            return
-        self._data[key] = value
+    def set(self, key, value, force=False):
+        ok, clean_val = self._validate_value(key, value)
+        if not ok:
+            return False
+        if not force and self._data.get(key) == clean_val:
+            return False
+        self._data[key] = clean_val
         self._atomic_save(self._data)
-        self.emit("settings-changed", key, value)
+        self.emit("settings-changed", key, clean_val)
+        return True
 
     def change_font_size(self, delta):
-        current = self.get("font_size", 11)
+        current = self.get("font_size", DEFAULT_SETTINGS["font_size"])
         new_size = max(6, min(48, current + delta))
         self.set("font_size", new_size)
+
+    def reset_font_size(self):
+        self.set("font_size", DEFAULT_SETTINGS["font_size"])
 
     def cycle_theme(self):
         current = self.get("theme", "Alacritty Dark")
